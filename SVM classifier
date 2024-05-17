@@ -1,0 +1,51 @@
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, accuracy_score
+from sklearn.datasets import load_iris
+
+# Load the Iris dataset
+iris = load_iris()
+data = pd.DataFrame(iris.data, columns=iris.feature_names)
+data['species'] = iris.target
+
+# Display the first few rows of the dataset
+print("First few rows of the dataset:")
+print(data.head())
+
+# Display the dataset's statistical summary
+print("\nStatistical summary of the dataset:")
+print(data.describe())
+
+# Display the distribution of the target variable
+print("\nDistribution of the target variable (species):")
+print(data['species'].value_counts())
+
+# Separate the features (X) and the target variable (y)
+X = data.drop('species', axis=1)
+y = data['species']
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the Support Vector Classifier (SVC) model
+model = SVC(kernel='linear')
+
+# Train the model using the training data
+model.fit(X_train, y_train)
+
+# Make predictions on the testing data
+y_pred = model.predict(X_test)
+
+# Evaluate the model's performance
+accuracy = accuracy_score(y_test, y_pred)
+print(f"\nAccuracy: {accuracy:.2f}")
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# Optional: Display the first few predictions along with actual values
+comparison = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+print("\nComparison of Actual vs Predicted values:")
+print(comparison.head())
